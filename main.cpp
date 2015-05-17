@@ -22,79 +22,48 @@ private:
 public:
     MyGraph(): number_of_edges(0), number_of_nodes(0) {} //using initialization list
     MyGraph(const MyGraph&);
-    my_set vertices();
-    my_set edges();
-    int countAllVertices();
-    int countAllEdges();
-    Edge getEdge(std::string, std::string);
-    my_set incidentEdges(std::string v);
-    std::string opposite(std::string, std::string);
-    my_set endVertices(std::string edge);
-    bool areAdjacent(std::string v, std::string w);
+    my_set vertices() const;
+    my_set edges() const;
+    int countAllVertices() const;
+    int countAllEdges() const;
+    Edge getEdge(std::string, std::string) const;
+    my_set incidentEdges(std::string v) const;
+    std::string opposite(std::string, std::string) const;
+    my_set endVertices(std::string edge) const;
+    bool areAdjacent(std::string v, std::string w) const;
     void insertVertex(std::string);
     void removeVertex(std::string vertexname);
     void insertEdge(std::string, std::string, std::string);
     void removeEdge(std::string, std::string);
-    std::string getEdgeElem (std::string);
+    std::string getEdgeElem (std::string) const;
     void replaceEdgeElem(std::string, std::string);
-    bool isEqual(const MyGraph&);
+    bool isEqual(const MyGraph&) const;
 };
-
-bool MyGraph::isEqual(const MyGraph& graph2) {
-    graph_hashmap::const_iterator g_iter = this->thegraph.begin();
-    std::set<std::string> notvisited(graph2.set_of_vertices);
-    while(g_iter != thegraph.end()){
-        if( graph2.set_of_vertices.find(g_iter->first) == graph2.set_of_vertices.end())
-            return false;
-        else{
-            node_hashmap::const_iterator n_iter = thegraph[g_iter->first].begin();
-            while (n_iter != thegraph[g_iter->first].end() ){// g_iter->second.end();
-                Edge thisedge = this->thegraph[g_iter->first][n_iter->first];
-                Edge otheredge = graph2.thegraph.at(g_iter->first).at(n_iter->first);
-                if( graph2.set_of_edges.find(n_iter->second.edgename) == graph2.set_of_edges.end())
-                    return false;
-                else{
-                    if ( strcmp(thisedge.edgename.c_str(),
-                                otheredge.edgename.c_str())!=0 ||
-                            strcmp(otheredge.element.c_str(),
-                                   thisedge.element.c_str())!=0  )
-                     return false;
-                    }
-                *n_iter++;
-                }
-            }
-        notvisited.erase(g_iter->first);
-        *g_iter++;
-        }
-    return (notvisited.size() == 0);
-};
-
-
 
 //02 ;; Return the set of all the vertices of the graph.
-std::set<std::string> MyGraph::vertices() {
+std::set<std::string> MyGraph::vertices() const{
     std::set<std::string> export_vertices(set_of_vertices);
     return export_vertices;}
 
 //03 ;; Return the set of all the edges of the graph.
-std::set<std::string> MyGraph::edges(){
+std::set<std::string> MyGraph::edges() const{
     std::set<std::string> export_edges(set_of_edges);
     return export_edges;}
 
 //04 ;; Return the number of vertices currently present in the graph.
-int MyGraph::countAllVertices() {return number_of_nodes; }
+int MyGraph::countAllVertices() const {return number_of_nodes; }
 
 //05 ;; Return the number of edges currently present in the graph.
-int MyGraph::countAllEdges() {return number_of_edges; }
+int MyGraph::countAllEdges() const {return number_of_edges; }
 
 //06 ;; Return the edge between vertices v and w;
 // An error occurs if there is no such edge.
-Edge MyGraph::getEdge(std::string v, std::string w){
+Edge MyGraph::getEdge(std::string v, std::string w) const{
     Edge save(thegraph[v][w]);
     return save;}
 
 //07 ;; Return the set of the edges incident on vertex v.
-std::set<std::string> MyGraph::incidentEdges(std::string v){
+std::set<std::string> MyGraph::incidentEdges(std::string v) const{
     std::set<std::string> set_of_incidents;
     if( thegraph.find(v)!= thegraph.end()){
         node_hashmap::const_iterator node_iterator = thegraph[v].begin();
@@ -107,7 +76,7 @@ std::set<std::string> MyGraph::incidentEdges(std::string v){
 
 //08 ;; Return the end-vertex of edge e distinct from vertex v
 // an error occurs if e is not incident on v.
-std::string MyGraph::opposite(std::string u, std::string e) {
+std::string MyGraph::opposite(std::string u, std::string e) const {
     node_hashmap::const_iterator node_iterator = thegraph[u].begin();
     while( node_iterator != thegraph[u].end()){
         if( std::strcmp( e.c_str(), thegraph[u][node_iterator->first].element.c_str() )==0 )
@@ -116,7 +85,7 @@ std::string MyGraph::opposite(std::string u, std::string e) {
     return std::string();}
 
 //09 ;; Return the set of the end vertices of edge e.
-std::set<std::string> MyGraph::endVertices(std::string edge){
+std::set<std::string> MyGraph::endVertices(std::string edge) const{
     std::set<std::string> eVertices;
     graph_hashmap::const_iterator graphiter= thegraph.begin();
     while(graphiter != thegraph.end()){
@@ -132,7 +101,7 @@ std::set<std::string> MyGraph::endVertices(std::string edge){
     return eVertices;}
 
 //10 ;; Test whether vertices v and w are adjacent.
-bool MyGraph::areAdjacent(std::string v, std::string w){
+bool MyGraph::areAdjacent(std::string v, std::string w) const{
     if (set_of_vertices.find(v) != set_of_vertices.end() &&
             set_of_vertices.find(w) != set_of_vertices.end()){
         return ( thegraph[v].find(w) != thegraph[v].end() &&
@@ -252,6 +221,35 @@ MyGraph::MyGraph(const MyGraph& other) {
     number_of_nodes= other.number_of_nodes;
 }
 
+
+bool MyGraph::isEqual(const MyGraph& graph2) const {
+    graph_hashmap::const_iterator g_iter = this->thegraph.begin();
+    std::set<std::string> notvisited(graph2.set_of_vertices);
+    while(g_iter != thegraph.end()){
+        if( graph2.set_of_vertices.find(g_iter->first) == graph2.set_of_vertices.end())
+            return false;
+        else{
+            node_hashmap::const_iterator n_iter = thegraph[g_iter->first].begin();
+            while (n_iter != thegraph[g_iter->first].end() ){// g_iter->second.end();
+                Edge thisedge = this->thegraph[g_iter->first][n_iter->first];
+                Edge otheredge = graph2.thegraph.at(g_iter->first).at(n_iter->first);
+                if( graph2.set_of_edges.find(n_iter->second.edgename) == graph2.set_of_edges.end())
+                    return false;
+                else{
+                    if ( strcmp(thisedge.edgename.c_str(),
+                                otheredge.edgename.c_str())!=0 ||
+                         strcmp(otheredge.element.c_str(),
+                                thisedge.element.c_str())!=0  )
+                        return false;
+                }
+                *n_iter++;
+            }
+        }
+        notvisited.erase(g_iter->first);
+        *g_iter++;
+    }
+    return (notvisited.size() == 0);
+};
 
 int main() {
 
