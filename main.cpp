@@ -38,6 +38,12 @@ public:
     std::string getEdgeElem (std::string) const;
     void replaceEdgeElem(std::string, std::string);
     bool isEqual(const MyGraph&) const;
+    bool emptyGraph();
+    MyGraph graph_intersection(const MyGraph&) const;
+    MyGraph graph_difference(const MyGraph&) const;
+    MyGraph graph_union(const MyGraph&) const;
+
+    void insertEdge(std::string v, std::string w);
 };
 
 //02 ;; Return the set of all the vertices of the graph.
@@ -59,15 +65,15 @@ int MyGraph::countAllEdges() const {return number_of_edges; }
 //06 ;; Return the edge between vertices v and w;
 // An error occurs if there is no such edge.
 Edge MyGraph::getEdge(std::string v, std::string w) const{
-    Edge save(thegraph[v][w]);
+    Edge save(thegraph.at(v).at(w));
     return save;}
 
 //07 ;; Return the set of the edges incident on vertex v.
 std::set<std::string> MyGraph::incidentEdges(std::string v) const{
     std::set<std::string> set_of_incidents;
     if( thegraph.find(v)!= thegraph.end()){
-        node_hashmap::const_iterator node_iterator = thegraph[v].begin();
-        while(node_iterator != thegraph[v].end()){
+        node_hashmap::const_iterator node_iterator = thegraph.at(v).begin();
+        while(node_iterator != thegraph.at(v).end()){
             set_of_incidents.insert(node_iterator->first);
             *node_iterator++;}}
     else
@@ -77,9 +83,9 @@ std::set<std::string> MyGraph::incidentEdges(std::string v) const{
 //08 ;; Return the end-vertex of edge e distinct from vertex v
 // an error occurs if e is not incident on v.
 std::string MyGraph::opposite(std::string u, std::string e) const {
-    node_hashmap::const_iterator node_iterator = thegraph[u].begin();
-    while( node_iterator != thegraph[u].end()){
-        if( std::strcmp( e.c_str(), thegraph[u][node_iterator->first].element.c_str() )==0 )
+    node_hashmap::const_iterator node_iterator = thegraph.at(u).begin();
+    while( node_iterator != thegraph.at(u).end()){
+        if( std::strcmp( e.c_str(), thegraph.at(u).at(node_iterator->first).element.c_str() )==0 )
             return (node_iterator->first);
         *node_iterator++;}
     return std::string();}
@@ -89,9 +95,9 @@ std::set<std::string> MyGraph::endVertices(std::string edge) const{
     std::set<std::string> eVertices;
     graph_hashmap::const_iterator graphiter= thegraph.begin();
     while(graphiter != thegraph.end()){
-        node_hashmap::const_iterator nodeiter = thegraph[graphiter->first].begin();
-        while(nodeiter != thegraph[graphiter->first].end()){
-            if( std::strcmp(thegraph[graphiter->first][nodeiter->first].edgename.c_str(), edge.c_str()) == 0){
+        node_hashmap::const_iterator nodeiter = thegraph.at(graphiter->first).begin();
+        while(nodeiter != thegraph.at(graphiter->first).end()){
+            if( std::strcmp(thegraph.at(graphiter->first).at(nodeiter->first).edgename.c_str(), edge.c_str()) == 0){
                 //std::cout<<"< "<<graphiter->first<<", "<<nodeiter->first<<" >";
                 eVertices.insert(graphiter->first);
                 eVertices.insert(nodeiter->first);
@@ -104,8 +110,8 @@ std::set<std::string> MyGraph::endVertices(std::string edge) const{
 bool MyGraph::areAdjacent(std::string v, std::string w) const{
     if (set_of_vertices.find(v) != set_of_vertices.end() &&
             set_of_vertices.find(w) != set_of_vertices.end()){
-        return ( thegraph[v].find(w) != thegraph[v].end() &&
-                thegraph[w].find(v) != thegraph[w].end());}
+        return ( thegraph.at(v).find(w) != thegraph.at(v).end() &&
+                thegraph.at(w).find(v) != thegraph.at(w).end());}
     else
         std::cout<<"ERROR: Cannot find either vertex "<<v<<" or "<<w<<std::endl;
         return false;}
@@ -137,6 +143,10 @@ void MyGraph::removeVertex(std::string vertexname){
         std::cout<<"ERROR: Named vertex "<<vertexname<<" does not exist."<<std::endl;
 }
 
+void MyGraph::insertEdge(std::string v, std::string w) {
+    this->insertEdge(v,w, std::to_string(this->number_of_edges+1));
+}
+
 //;13 ;; Create and insert a new undirected edge with
 //end vertices v and w and storing element x and
 void MyGraph::insertEdge(std::string v, std::string w, std::string x) {
@@ -166,7 +176,7 @@ void MyGraph::removeEdge(std::string v, std::string w) {
         std::cout<<"ERROR: Either "<<v<<" or "<<w<<" vertices were not found.";}
 
 //;15 ;; Return the element associated with edge e.
-std::string MyGraph::getEdgeElem(std::string edgename) {
+std::string MyGraph::getEdgeElem(std::string edgename) const {
     std::unordered_map<std::string, std::unordered_map<std::string, Edge>>::const_iterator graphiter = thegraph.begin();
     std::string found = "Not found.";
     while(graphiter != thegraph.end()){
@@ -229,9 +239,9 @@ bool MyGraph::isEqual(const MyGraph& graph2) const {
         if( graph2.set_of_vertices.find(g_iter->first) == graph2.set_of_vertices.end())
             return false;
         else{
-            node_hashmap::const_iterator n_iter = thegraph[g_iter->first].begin();
-            while (n_iter != thegraph[g_iter->first].end() ){// g_iter->second.end();
-                Edge thisedge = this->thegraph[g_iter->first][n_iter->first];
+            node_hashmap::const_iterator n_iter = thegraph.at(g_iter->first).begin();
+            while (n_iter != thegraph.at(g_iter->first).end() ){// g_iter->second.end();
+                Edge thisedge = this->thegraph.at(g_iter->first).at(n_iter->first);
                 Edge otheredge = graph2.thegraph.at(g_iter->first).at(n_iter->first);
                 if( graph2.set_of_edges.find(n_iter->second.edgename) == graph2.set_of_edges.end())
                     return false;
@@ -281,7 +291,7 @@ int main() {
 */
     std::cout<<"GraphADT implementation."<<std::endl;
 
-    MyGraph g1;
+   /* MyGraph g1;
     printSet(g1.vertices());
 
     g1.insertVertex("f");
@@ -350,7 +360,7 @@ int main() {
     MyGraph g3(g2);
     std::cout<<(g2.isEqual(g3)?"Graphs are identical":"Graphs are different")<<std::endl;
 
-    printSet(g3.vertices());
+    printSet(g3.vertices());*/
 
     //  MyGraph g3,g4;
 
@@ -379,6 +389,42 @@ int main() {
     std::cout<<v<<" is the opposite of "<<g1.opposite(v,e)<<" by "<<e<<std::endl;
 */
 
+    MyGraph gx;
+    gx.insertVertex("1");
+    gx.insertVertex("2");
+    gx.insertVertex("3");
+    gx.insertVertex("4");
+    gx.insertVertex("5");
+    gx.insertEdge("1","2");
+    gx.insertEdge("2","3");
+    gx.insertEdge("3","5");
+    gx.insertEdge("5","4");
+    gx.insertEdge("2","4");
+
+    MyGraph gy;
+    gy.insertVertex("3");
+    gy.insertVertex("4");
+    gy.insertVertex("5");
+    gy.insertVertex("6");
+    gy.insertEdge("3","5");
+    gy.insertEdge("6","4");
+    gy.insertEdge("3","4");
+    gy.insertEdge("5","6");
+
+    MyGraph gu = gx.graph_intersection(gy);
+
+    printSet(gx.edges());
+
+
     return 0;
 }
 
+bool MyGraph::emptyGraph() {
+    return (number_of_nodes==0);
+}
+
+MyGraph MyGraph::graph_intersection(const MyGraph &graph) const {
+    MyGraph output;
+
+    return output;
+}
