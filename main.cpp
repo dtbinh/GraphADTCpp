@@ -4,7 +4,9 @@
 
 struct Edge{
     std::string edgename;
-    std::string element;};
+    std::string element;
+    int weight;
+};
 
 typedef std::unordered_map<std::string, Edge> node_hashmap;
 typedef std::unordered_map<std::string, node_hashmap> graph_hashmap;
@@ -15,18 +17,19 @@ private:
     int number_of_nodes;
     int number_of_edges;
     graph_hashmap thegraph;
-    std::set<std::string> set_of_vertices;
-    std::set<std::string> set_of_edges;
+    my_set set_of_vertices;
+    my_set set_of_edges;
 public:
     MyGraph(): number_of_edges(0), number_of_nodes(0) {} //using initialization list
-    std::set<std::string> vertices();
-    std::set<std::string> edges();
+    MyGraph(const MyGraph&);
+    my_set vertices();
+    my_set edges();
     int countAllVertices();
     int countAllEdges();
     Edge getEdge(std::string, std::string);
-    std::set<std::string> incidentEdges(std::string v);
+    my_set incidentEdges(std::string v);
     std::string opposite(std::string, std::string);
-    std::set<std::string> endVertices(std::string edge);
+    my_set endVertices(std::string edge);
     bool areAdjacent(std::string v, std::string w);
     void insertVertex(std::string);
     void removeVertex(std::string vertexname);
@@ -34,10 +37,10 @@ public:
     void removeEdge(std::string, std::string);
     std::string getEdgeElem (std::string);
     void replaceEdgeElem(std::string, std::string);
-    bool isEqual(MyGraph);
+    bool isEqual(const MyGraph&);
 };
 
-bool MyGraph::isEqual(MyGraph graph2) {
+bool MyGraph::isEqual(const MyGraph& graph2) {
     graph_hashmap::const_iterator g_iter = this->thegraph.begin();
     std::set<std::string> notvisited(graph2.set_of_vertices);
     while(g_iter != thegraph.end()){
@@ -47,7 +50,7 @@ bool MyGraph::isEqual(MyGraph graph2) {
             node_hashmap::const_iterator n_iter = thegraph[g_iter->first].begin();
             while (n_iter != thegraph[g_iter->first].end() ){// g_iter->second.end();
                 Edge thisedge = this->thegraph[g_iter->first][n_iter->first];
-                Edge otheredge = graph2.thegraph[g_iter->first][n_iter->first];
+                Edge otheredge = graph2.thegraph.at(g_iter->first).at(n_iter->first);
                 if( graph2.set_of_edges.find(n_iter->second.edgename) == graph2.set_of_edges.end())
                     return false;
                 else{
@@ -57,14 +60,13 @@ bool MyGraph::isEqual(MyGraph graph2) {
                                    thisedge.element.c_str())!=0  )
                      return false;
                     }
-                n_iter++;
+                *n_iter++;
                 }
             }
         notvisited.erase(g_iter->first);
-        g_iter++;
+        *g_iter++;
         }
-    if( notvisited.size() != 0) return false;
-    else return true;
+    return (notvisited.size() == 0);
 };
 
 
@@ -222,7 +224,7 @@ void MyGraph::replaceEdgeElem(std::string edge, std::string x){
     std::cout<<"ERROR: Edge not found.";}
 
 //17 Pretty-printing the set.
-void printSet(const std::set<std::string> set){
+void printSet(const std::set<std::string>& set){
     int c=0;
     std::cout<<"< ";
     std::set<std::string>::const_iterator setiter = set.begin();
@@ -231,11 +233,27 @@ void printSet(const std::set<std::string> set){
     std::cout<<" >"<<std::endl;}
 
 
-void printEdge(Edge e){
+void printEdge(const Edge& e){
     std::cout<<"\nEdgename: "<<e.edgename<<"\nElement: "<<e.element<<std::endl;}
 
+
+/*
+ * Copy constructor
+ */
+MyGraph::MyGraph(const MyGraph& other) {
+    graph_hashmap::const_iterator g_iter = other.thegraph.begin();
+    while (g_iter != other.thegraph.end()){
+        thegraph[g_iter->first]= node_hashmap(g_iter->second);
+        *g_iter++;
+    }
+    set_of_vertices = my_set(other.set_of_vertices);
+    set_of_edges = my_set(other.set_of_edges);
+    number_of_edges= other.number_of_edges;
+    number_of_nodes= other.number_of_nodes;
+}
+
+
 int main() {
-    std::cout << "Hello, World!" << std::endl;
 
  /*   typedef std::unordered_map<std::string, std::unordered_map<std::string, std::string>> mygraph;
    // typedef std::unordered_map<std::string, std::string> node_hashmap;
@@ -263,7 +281,7 @@ int main() {
         std::cout<< i->first <<std::endl;
     }
 */
-    std::cout<<"Working on another program"<<std::endl;
+    std::cout<<"GraphADT implementation."<<std::endl;
 
     MyGraph g1;
     printSet(g1.vertices());
@@ -328,10 +346,15 @@ int main() {
     g2.insertEdge("v","u","E2");
     g2.insertVertex("w");
 
+
     std::cout<<(g2.isEqual(g1)?"Graphs are identical":"Graphs are different")<<std::endl;
 
+    MyGraph g3(g2);
+    std::cout<<(g2.isEqual(g3)?"Graphs are identical":"Graphs are different")<<std::endl;
 
-  //  MyGraph g3,g4;
+    printSet(g3.vertices());
+
+    //  MyGraph g3,g4;
 
  //   g4.insertVertex("v");
    // std::cout<<(g3.isEqual(g4)?"Graphs are identical":"Graphs are different")<<std::endl;
@@ -360,6 +383,4 @@ int main() {
 
     return 0;
 }
-
-
 
