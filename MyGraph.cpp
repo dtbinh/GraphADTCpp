@@ -1,5 +1,5 @@
 //
-// Created by Adrian Diaz on 15-05-17.
+// Created by Adrianne Diaz on 15-05-17.
 //
 
 #include "MyGraph.h"
@@ -220,23 +220,81 @@ MyGraph MyGraph::graph_intersection(const MyGraph& g2) const {
         //If the vertex in g1 does not exist in g2, then skip it.
         if( g2.set_of_vertices.find(g1_it->first) != g2.set_of_vertices.end())
         {
-            output.thegraph[g1_it->first] = node_hashmap();
+            //output.thegraph[g1_it->first] = node_hashmap();
+            //output.insertVertex(g1_it->first);
+            output.thegraph[g1_it->first]= node_hashmap();
             //cycle through all the edges contained in the node hashmap
             node_hashmap::const_iterator node_iter = g1_it->second.begin();
             while (node_iter != g1_it->second.end() ){
-
+                if( this->thegraph.at(g1_it->first).count(node_iter->first) > 0 &&
+                        g2.thegraph.at(g1_it->first).count(node_iter->first)>0){
+                    //output.insertEdge(g1_it->first,node_iter->first);
+                    Edge e;
+                    e.edgename= std::to_string(++output.number_of_edges);
+                    output.thegraph[g1_it->first][node_iter->first]=e;
+                }
                 *node_iter++;
             }
-
         }
         *g1_it++;
     }
-
-
-
-
     return output;
 }
 
 
+MyGraph MyGraph::graph_union(const MyGraph& g2) const {
+    MyGraph output;
 
+    graph_hashmap::const_iterator g_iter = this->thegraph.begin();
+    while (g_iter != this->thegraph.end()){
+        output.thegraph[g_iter->first]= node_hashmap(g_iter->second);
+        *g_iter++;
+    }
+    output.set_of_vertices = my_set(this->set_of_vertices);
+    output.set_of_edges = my_set(this->set_of_edges);
+    output.number_of_edges= this->number_of_edges;
+    output.number_of_nodes= this->number_of_nodes;
+
+    graph_hashmap::const_iterator g2_it = g2.thegraph.begin();
+    while(g2_it != this->thegraph.end()){
+          //output.thegraph[g1_it->first] = node_hashmap();
+        if ( output.thegraph.find(g2_it->first) == output.thegraph.end())
+            //output.insertVertex(g2_it->first);
+            output.thegraph[g2_it->first]= node_hashmap();
+            output.number_of_nodes++;
+            output.set_of_vertices.insert(g2_it->first);
+            //cycle through all the edges contained in the node hashmap
+            node_hashmap::const_iterator node_iter = g2_it->second.begin();
+            while (node_iter != g2_it->second.end() ){
+                    //output.insertEdge(g2_it->first,node_iter->first);
+                    // g2_it->second[node_iter->first]=std::to_string(++output.number_of_edges);
+                    Edge e;
+                    e.edgename=std::to_string(++output.number_of_edges);
+                    output.thegraph[g2_it->first][node_iter->first]=e;
+                    output.set_of_edges.insert(std::to_string(output.number_of_edges));
+                    *node_iter++;
+                    }
+        *g2_it++;
+    }
+    return output;
+}
+
+
+void MyGraph::printGraph() const {
+    graph_hashmap::const_iterator g_iter = thegraph.begin();
+    std::cout<<"\n\n______________\nPrinting Graph"<<std::endl;
+    while ( g_iter != thegraph.end()){
+        std::cout<<"("<<g_iter->first<<")  | ";
+
+        node_hashmap::const_iterator n_iter = g_iter->second.begin();
+
+        while ( n_iter != g_iter->second.end()){
+            std::cout<<" < ("<<n_iter->first<<"), «"<<n_iter->second.edgename<<"» > ";
+            *n_iter++;
+        }
+        std::cout<<std::endl;
+
+        *g_iter++;
+    }
+
+}

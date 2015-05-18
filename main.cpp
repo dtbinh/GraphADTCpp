@@ -157,9 +157,10 @@ int main() {
 
     printSet(gx.edges());
 
-    MyGraph gu = gx.graph_intersection(gy);
+    MyGraph gu = gx.graph_union(gy);
+    gu.printGraph();
 
-
+    gx.graph_intersection(gy).printGraph();
 
     return 0;
 }

@@ -3,7 +3,7 @@
 #endif //GRAPHADTCPP_MYGRAPH_H
 
 //
-// Created by Adrian Diaz on 15-05-17.
+// Created by Adrianne Diaz on 15-05-17.
 //
 
 struct Edge{
@@ -47,7 +47,7 @@ public:
     MyGraph graph_intersection(const MyGraph&) const;
     MyGraph graph_difference(const MyGraph&) const;
     MyGraph graph_union(const MyGraph&) const;
-
+    void printGraph() const;
     void insertEdge(std::string v, std::string w);
 };
 
