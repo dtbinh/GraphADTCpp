@@ -140,8 +140,8 @@ void MyGraph::insertEdge(std::string v, std::string w, std::string x) {
         else
             std::cout<<"ERROR: The edge already exists."<<std::endl;
         }
-    else
-        std::cout<<"ERROR: Cannot proceed, one or more vertices don't exist."<<std::endl;
+    //else
+        //std::cout<<"ERROR: Cannot proceed, one or more vertices don't exist."<<std::endl;
     }
 
 //14 ;; Remove edge (v, w) and
@@ -207,21 +207,6 @@ MyGraph::MyGraph(const MyGraph& other) {
     number_of_nodes= other.number_of_nodes;
     }
 
-/*MyGraph MyGraph::copyUtil(const MyGraph& other) {
-    MyGraph output;
-
-    graph_hashmap::const_iterator g_iter = other.thegraph.begin();
-    while (g_iter != other.thegraph.end()){
-        output.thegraph[g_iter->first]= node_hashmap(g_iter->second);
-        *g_iter++;
-    }
-    output.set_of_vertices = my_set(other.set_of_vertices);
-    output.set_of_edges = my_set(other.set_of_edges);
-    output.number_of_edges= other.number_of_edges;
-    output.number_of_nodes= other.number_of_nodes;
-    return output;
-}*/
-
 
 bool MyGraph::isEqual(const MyGraph& graph2) const {
     graph_hashmap::const_iterator g_iter = this->thegraph.begin();
@@ -233,10 +218,10 @@ bool MyGraph::isEqual(const MyGraph& graph2) const {
             node_hashmap::const_iterator n_iter = thegraph.at(g_iter->first).begin();
             while (n_iter != thegraph.at(g_iter->first).end() ){// g_iter->second.end();
                 Edge thisedge = this->thegraph.at(g_iter->first).at(n_iter->first);
-                Edge otheredge = graph2.thegraph.at(g_iter->first).at(n_iter->first);
                 if( graph2.set_of_edges.find(n_iter->second.edgename) == graph2.set_of_edges.end())
                     return false;
                 else{
+                    Edge otheredge = graph2.thegraph.at(g_iter->first).at(n_iter->first);
                     if ( strcmp(thisedge.edgename.c_str(),
                                 otheredge.edgename.c_str())!=0 ||
                          strcmp(otheredge.element.c_str(),
@@ -266,12 +251,12 @@ MyGraph MyGraph::graph_intersection(const MyGraph& g2) const {
             //cycle through all the edges contained in the node hashmap
             node_hashmap::const_iterator node_iter = g1_it->second.begin();
             while (node_iter != g1_it->second.end() ){
-                if( this->thegraph.at(g1_it->first).count(node_iter->first) > 0 &&
-                        g2.thegraph.at(g1_it->first).count(node_iter->first)>0){
-                    //output.insertEdge(g1_it->first,node_iter->first);
-                    Edge e;
+                if( this->thegraph.at(g1_it->first).find(node_iter->first) != thegraph.at(g1_it->first).end() &&
+                        g2.thegraph.at(g1_it->first).find(node_iter->first) != g2.thegraph.at(g1_it->first).end()){
+                    output.insertEdge(g1_it->first,node_iter->first);
+          /*          Edge e;
                     e.edgename= std::to_string(++output.number_of_edges);
-                    output.thegraph[g1_it->first][node_iter->first]=e;
+                    output.thegraph[g1_it->first][node_iter->first]=e;*/
                     }
                 *node_iter++;
                 }
@@ -284,7 +269,6 @@ MyGraph MyGraph::graph_intersection(const MyGraph& g2) const {
 
 MyGraph MyGraph::graph_union(const MyGraph& g2) const {
     MyGraph output = copyGraph();
-
     graph_hashmap::const_iterator g2_it = g2.thegraph.begin();
     while(g2_it != this->thegraph.end()){
         if ( output.thegraph.find(g2_it->first) == output.thegraph.end())
@@ -316,27 +300,41 @@ MyGraph MyGraph::copyGraph() const {
 
 MyGraph MyGraph::graph_difference(MyGraph const& g2) const{
     MyGraph output = copyGraph();
-
     graph_hashmap::const_iterator g_iter = g2.thegraph.begin();
     while( g_iter != g2.thegraph.end()){
         if(output.set_of_vertices.find(g_iter->first) != output.set_of_vertices.end())
             output.removeVertex(g_iter->first);
-        //output.set_of_vertices.erase(g_iter->first);
         *g_iter++;
         }
     return output;
     }
 
-MyGraph MyGraph::graph_complement() const{
-    MyGraph output;
 
+MyGraph MyGraph::graph_complement() const{
+    MyGraph output = copyGraph();
+    graph_hashmap::const_iterator g_iter = thegraph.begin();
+    my_set::const_iterator g2_iter;
+    while (g_iter != thegraph.end()){
+        g2_iter = set_of_vertices.begin();
+        while ( g2_iter != set_of_vertices.end()){
+            if (strcmp(g_iter->first.c_str(),(*g2_iter).c_str()) ){ //avoid self-loops
+                if( areAdjacent(g_iter->first, *g2_iter) )
+                    output.removeEdge(g_iter->first, *g2_iter);
+                else
+                    if (!output.areAdjacent(g_iter->first, *g2_iter))
+                        output.insertEdge(g_iter->first, *g2_iter);
+                }
+            *g2_iter++;
+            }
+        *g_iter++;
+        }
     return output;
 }
 
 
 void MyGraph::printGraph() const {
-    graph_hashmap::const_iterator g_iter = thegraph.begin();
     std::cout<<"______________\nPrinting Graph"<<std::endl;
+    graph_hashmap::const_iterator g_iter = thegraph.begin();
     while ( g_iter != thegraph.end()){
         std::cout<<"("<<g_iter->first<<")  | ";
         node_hashmap::const_iterator n_iter = g_iter->second.begin();

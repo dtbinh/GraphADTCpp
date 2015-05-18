@@ -35,7 +35,7 @@ int main() {
 */
     std::cout<<"GraphADT implementation."<<std::endl;
 
-   /* MyGraph g1;
+    MyGraph g1;
     printSet(g1.vertices());
 
     g1.insertVertex("f");
@@ -104,19 +104,20 @@ int main() {
     MyGraph g3(g2);
     std::cout<<(g2.isEqual(g3)?"Graphs are identical":"Graphs are different")<<std::endl;
 
-    printSet(g3.vertices());*/
-
-    //  MyGraph g3,g4;
-
- //   g4.insertVertex("v");
-   // std::cout<<(g3.isEqual(g4)?"Graphs are identical":"Graphs are different")<<std::endl;
-   // std::cout<<(g4.isEqual(g3)?"Graphs are identical":"Graphs are different")<<std::endl;
+    printSet(g3.vertices());
 
 
+    MyGraph g5,g4;
 
-/*
-    std::set<std::string> barf = g1.endVertices("E2");
-    printSet(barf);
+    g4.insertVertex("v");
+    std::cout<<(g3.isEqual(g4)?"Graphs are identical":"Graphs are different")<<std::endl;
+    std::cout<<(g4.isEqual(g3)?"Graphs are identical":"Graphs are different")<<std::endl;
+
+
+
+
+    //my_set barf = g1.endVertices("E2");
+  //  printSet(barf);
     std::cout<<g1.areAdjacent("u","w")<<std::endl;
     std::cout<<g1.areAdjacent("u","v")<<std::endl;
 
@@ -131,7 +132,7 @@ int main() {
     std::string e = "E2";
 
     std::cout<<v<<" is the opposite of "<<g1.opposite(v,e)<<" by "<<e<<std::endl;
-*/
+
 
     MyGraph gx;
     gx.insertVertex("1");
@@ -180,6 +181,18 @@ int main() {
 
     gy.graph_difference(gx).printGraph();
     gx.graph_difference(gx).printGraph();
+
+
+    std::cout<<"Graph X"<<std::endl;
+    gx.printGraph();
+    std::cout<<"and it's complement"<<std::endl;
+    gx.graph_complement().printGraph();
+
+
+    std::cout<<"Graph Y"<<std::endl;
+    gy.printGraph();
+    std::cout<<"and it's complement"<<std::endl;
+    gy.graph_complement().printGraph();
 
 
     return 0;
