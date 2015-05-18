@@ -26,7 +26,9 @@ private:
     my_set set_of_edges;
 public:
     MyGraph(): number_of_edges(0), number_of_nodes(0) {} //using initialization list
-    MyGraph(const MyGraph&);
+    MyGraph(MyGraph const&);
+    MyGraph copyUtil(const MyGraph&);
+
     my_set vertices() const;
     my_set edges() const;
     int countAllVertices() const;
@@ -47,8 +49,12 @@ public:
     MyGraph graph_intersection(const MyGraph&) const;
     MyGraph graph_difference(const MyGraph&) const;
     MyGraph graph_union(const MyGraph&) const;
+    MyGraph graph_complement() const;
+
     void printGraph() const;
     void insertEdge(std::string v, std::string w);
+
+    MyGraph copyGraph() const;
 };
 
 

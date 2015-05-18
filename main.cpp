@@ -157,10 +157,30 @@ int main() {
 
     printSet(gx.edges());
 
+    std::cout<<"gx union gy"<<std::endl;
     MyGraph gu = gx.graph_union(gy);
     gu.printGraph();
 
+    std::cout<<"gx intersection gx"<<std::endl;
+    gx.graph_intersection(gx).printGraph();
+
+    std::cout<<"gx intersection gy"<<std::endl;
     gx.graph_intersection(gy).printGraph();
+
+    std::cout<<"gy intersection gx"<<std::endl;
+    gy.graph_intersection(gx).printGraph();
+
+    std::cout<<"gy intersection gy"<<std::endl;
+    gy.graph_intersection(gy).printGraph();
+
+
+
+    gx.graph_difference(gy).printGraph();
+    gy.graph_difference(gy).printGraph();
+
+    gy.graph_difference(gx).printGraph();
+    gx.graph_difference(gx).printGraph();
+
 
     return 0;
 }
