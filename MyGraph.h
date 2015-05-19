@@ -27,6 +27,7 @@ private:
 public:
     MyGraph(): number_of_edges(0), number_of_nodes(0) {} //using initialization list
     MyGraph(MyGraph const&);
+
     MyGraph copyUtil(const MyGraph&);
 
     my_set vertices() const;
