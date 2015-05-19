@@ -140,8 +140,8 @@ void MyGraph::insertEdge(std::string v, std::string w, std::string x) {
         else
             std::cout<<"ERROR: The edge already exists."<<std::endl;
         }
-    //else
-        //std::cout<<"ERROR: Cannot proceed, one or more vertices don't exist."<<std::endl;
+    else
+        std::cout<<"ERROR: Cannot proceed, one or more vertices don't exist."<<std::endl;
     }
 
 //14 ;; Remove edge (v, w) and
@@ -253,11 +253,9 @@ MyGraph MyGraph::graph_intersection(const MyGraph& g2) const {
             while (node_iter != g1_it->second.end() ){
                 if( this->thegraph.at(g1_it->first).find(node_iter->first) != thegraph.at(g1_it->first).end() &&
                         g2.thegraph.at(g1_it->first).find(node_iter->first) != g2.thegraph.at(g1_it->first).end()){
+
                     output.insertEdge(g1_it->first,node_iter->first);
-          /*          Edge e;
-                    e.edgename= std::to_string(++output.number_of_edges);
-                    output.thegraph[g1_it->first][node_iter->first]=e;*/
-                    }
+                      }
                 *node_iter++;
                 }
             }
