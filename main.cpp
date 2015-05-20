@@ -1,9 +1,13 @@
 #include <unordered_map>
 #include <iostream>
 #include <set>
+#include <QApplication>
+#include <QLabel>
+
 #include "MyGraph.cpp"
 
-int main() {
+
+int main(int argc, char *argv[]) {
 
  /*   typedef std::unordered_map<std::string, std::unordered_map<std::string, std::string>> mygraph;
    // typedef std::unordered_map<std::string, std::string> node_hashmap;
@@ -192,9 +196,11 @@ int main() {
     std::cout<<"and it's complement"<<std::endl;
     gy.graph_complement().printGraph();
 
+    QApplication app(argc, argv);
+    QLabel *label = new QLabel("Test1");
 
-
-
-    return 0;
+    label->show();
+    return app.exec();
+    //return 0;
 }
 

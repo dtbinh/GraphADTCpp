@@ -159,7 +159,7 @@ void MyGraph::removeEdge(std::string v, std::string w) {
 
 //;15 ;; Return the element associated with edge e.
 std::string MyGraph::getEdgeElem(std::string edgename) const {
-    std::unordered_map<std::string, std::unordered_map<std::string, Edge>>::const_iterator graphiter = thegraph.begin();
+    std::unordered_map<std::string, std::unordered_map<std::string, Edge> >::const_iterator graphiter = thegraph.begin();
     std::string found = "Not found.";
     while(graphiter != thegraph.end()){
         std::unordered_map<std::string, Edge>::const_iterator node_iter = ((*graphiter).second).begin();
@@ -175,7 +175,7 @@ std::string MyGraph::getEdgeElem(std::string edgename) const {
 
 //16 ;; Replace the element stored at edge e with x
 void MyGraph::replaceEdgeElem(std::string edge, std::string x){
-    std::unordered_map<std::string, std::unordered_map<std::string, Edge>>::const_iterator graphiter = thegraph.begin();
+    std::unordered_map<std::string, std::unordered_map<std::string, Edge> >::const_iterator graphiter = thegraph.begin();
     while(graphiter != thegraph.end()){
         std::unordered_map<std::string, Edge>::const_iterator node_iter = ((*graphiter).second).begin();
         while(node_iter != ((*graphiter).second).end()){
