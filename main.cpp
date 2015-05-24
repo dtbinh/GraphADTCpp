@@ -1,14 +1,17 @@
 #include <unordered_map>
 #include <iostream>
 #include <set>
+/*
 #include <QApplication>
 #include <QLabel>
 #include <QPushButton>
 #include <QSlider>
 #include <QHBoxLayout>
 #include <QSpinBox>
+*/
 
-#include "MyGraph.cpp"
+#include "MyGraph.h"
+
 
 
 int main(int argc, char *argv[]) {
@@ -200,7 +203,7 @@ int main(int argc, char *argv[]) {
     std::cout<<"and it's complement"<<std::endl;
     gy.graph_complement().printGraph();
 
-    QApplication app(argc, argv);
+/*    QApplication app(argc, argv);
     QWidget *window = new QWidget;
     window->setWindowTitle("GraphADT");
     QSpinBox *spinbox = new QSpinBox;
@@ -209,33 +212,31 @@ int main(int argc, char *argv[]) {
     spinbox->setRange(0,130);
     slider->setRange(0,130);
 
-    QObject::connect(spinbox, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
-    QObject::connect(slider, SIGNAL(valueChanged(int)), spinbox, SLOT(setValue(int)));
+   QObject::connect(spinbox, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
+   QObject::connect(slider, SIGNAL(valueChanged(int)), spinbox, SLOT(setValue(int)));
 
-    spinbox->setValue(35);
+   spinbox->setValue(35);
 
-    QHBoxLayout *layout = new QHBoxLayout;
-
-
-    QLabel *label = new QLabel("<h2><i>Test2</i>" "<font color=green> QT!</font></h2>");
-    QPushButton *button = new QPushButton("Quit program");
-    QObject::connect(button, SIGNAL(clicked()), &app, SLOT(quit()));
-
-    QTextFormat
+   QHBoxLayout *layout = new QHBoxLayout;
 
 
-    layout->addWidget(spinbox);
-    layout->addWidget(slider);
-    layout->addWidget(button);
-    layout->addWidget(label);
+   QLabel *label = new QLabel("<h2><i>Test2</i>" "<font color=green> QT!</font></h2>");
+   QPushButton *button = new QPushButton("Quit program");
+   QObject::connect(button, SIGNAL(clicked()), &app, SLOT(quit()));
 
-    window->setLayout(layout);
 
-    window->show();
+   layout->addWidget(spinbox);
+   layout->addWidget(slider);
+   layout->addWidget(button);
+   layout->addWidget(label);
+
+   window->setLayout(layout);
+
+    window->show();*/
 
 //    button->show();
 //    label->show();
     return app.exec();
-    //return 0;
+    return 0;
 }
 

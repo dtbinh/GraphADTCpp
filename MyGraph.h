@@ -6,6 +6,8 @@
 // Created by Adrianne Diaz on 15-05-17.
 //
 
+#include "GraphADT.cpp"
+
 struct Edge{
     std::string edgename;
     std::string element;
@@ -52,6 +54,13 @@ public:
     void printGraph() const;
     void insertEdge(std::string v, std::string w);
     MyGraph copyGraph() const;
+};
+
+class DirectedMyGraph : MyGraph{
+
+public:
+    bool areAdjacent(std::string v, std::string w) const;
+
 };
 
 
